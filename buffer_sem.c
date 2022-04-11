@@ -32,7 +32,7 @@ SYSCALL_DEFINE0(init_buffer_sem_421)
 						.write = nodes_sem };
 
 		// Initialize your semaphores here
-		sema_init(&mutex, i);
+		sema_init(&mutex, 1);
 		sema_init(&fill_count, 0);
 		sema_init(&empty_count, 20);
 
