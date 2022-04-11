@@ -35,7 +35,7 @@ void *producer()
 {
     srand(time(0));
 
-    for (size_t i = 0; i < 10; i++)
+    for (size_t i = 0; i < 1000; i++)
     {
         char data[1024];
 
@@ -44,17 +44,12 @@ void *producer()
             data[j] = (i % 10) + '0';
         }
 
-        test_enqueue_sem(data);
-
-        // print_semaphores();
-        // print_semaphores();
-
         // wait between 0 - 10 milliseconds
         int random = (rand() % 11);
         float sleep_time = random * 1000;
         usleep(sleep_time);
 
-        // sleep(1);
+        test_enqueue_sem(data);
     }
 
     return 0;
@@ -64,20 +59,16 @@ void *consumer()
 {
     srand(time(NULL));
 
-    for (size_t i = 0; i < 10; i++)
+    for (size_t i = 0; i < 1000; i++)
     {
         char data[1024];
-        test_dequeue_sem(data);
-
-        // print_semaphores();
-        // print_semaphores();
 
         // wait between 0 - 10 milliseconds
         int random = (rand() % 11);
         float sleep_time = random * 1000;
         usleep(sleep_time);
 
-        // sleep(1);
+        test_dequeue_sem(data);
     }
 
     return 0;
@@ -88,24 +79,24 @@ int main()
 
     test_init_sem();
 
-    pthread_t th[2];
+    pthread_t prod, cons;
 
-    if (pthread_create(&th[1], NULL, &producer, NULL) != 0)
+    if (pthread_create(&prod, NULL, producer, NULL) != 0)
     {
         perror("Failed to create producer thread");
     }
 
-    if (pthread_create(&th[2], NULL, &consumer, NULL) != 0)
+    if (pthread_create(&cons, NULL, consumer, NULL) != 0)
     {
         perror("Failed to create consumer thread");
     }
 
-    if (pthread_join(th[1], NULL) != 0)
+    if (pthread_join(prod, NULL) != 0)
     {
         perror("Failed to join producer thread");
     }
 
-    if (pthread_join(th[2], NULL) != 0)
+    if (pthread_join(cons, NULL) != 0)
     {
         perror("Failed to join consumer thread");
     }
